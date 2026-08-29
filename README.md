@@ -1,5 +1,11 @@
 # Roxi AI
 
+[![CI](https://github.com/joeclive77-spec/test/actions/workflows/ci.yml/badge.svg)](https://github.com/joeclive77-spec/test/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](backend/requirements.txt)
+[![Node 18+](https://img.shields.io/badge/node-18+-green.svg)](mobile/package.json)
+[![Expo ~51](https://img.shields.io/badge/expo-~51-000020.svg)](mobile/package.json)
+
 A cross-platform, multimodal conversational AI assistant with real-time web
 search, streaming chat, image generation, and voice — Python/FastAPI backend
 plus an Expo (React Native) mobile client.

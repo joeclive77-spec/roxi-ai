@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a bug to help us improve Roxi AI.
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill out the sections below.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the project is affected?
+      options:
+        - Backend (FastAPI)
+        - Mobile app (Expo / React Native)
+        - LLM / Search integration
+        - Deployment / Infrastructure
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Clear, concise description of the bug.
+      placeholder: The chat endpoint returned 500 when I sent a long message...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal sequence to trigger the bug.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: The endpoint should return a streaming SSE response.
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python/Node version, browser, etc.
+      placeholder: macOS 14.4, Python 3.11.7, Node 18.19, iOS 17 Expo Go
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Paste relevant logs or attach screenshots.
+    validations:
+      required: false

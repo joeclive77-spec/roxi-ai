@@ -1,0 +1,14 @@
+name: Config
+description: Tweak or extend the .github/ folder
+labels: ["skip-changelog"]
+body:
+  - type: markdown
+    attributes:
+      value: Use this for changes to issue templates, CI workflows, etc.
+  - type: textarea
+    id: what
+    attributes:
+      label: What changed?
+      placeholder: Added a new CI job that lints the mobile app.
+    validations:
+      required: true
