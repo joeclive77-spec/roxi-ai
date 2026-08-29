@@ -4,8 +4,12 @@ Use pydantic-settings so all secrets (LLM keys, Tavily key, DB URL) live in
 .env, never in code. Values are accessible as typed attributes on the singleton
 `settings` instance.
 """
-from functools import lru_cache
+import json
 
+from functools import lru_cache
+from typing import List
+
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,19 +19,19 @@ class Settings(BaseSettings):
     )
 
     # App
-    app_name: str = "AI Assistant"
+    app_name: str = "Roxi AI"
     app_env: str = "development"
 
     # Backend
     api_host: str = "0.0.0.0"
     api_port: int = 8000
-    cors_origins: list[str] = ["*"]
+    cors_origins: List[str] = ["*"]
 
     # LLM orchestrator
     llm_api_key: str = ""
     llm_base_url: str = "https://api.openai.com/v1"
     llm_chat_model: str = "gpt-4o-mini"
-    llm_agent_models: list[str] = ["gpt-4o"]
+    llm_agent_models: List[str] = ["gpt-4o"]
     llm_max_tokens: int = 4096
 
     # Search grounding
@@ -48,6 +52,29 @@ class Settings(BaseSettings):
     # Limits / cost control
     rate_limit_per_min: int = 60
     rate_limit_tokens_per_day: int = 100_000
+
+    @field_validator("llm_agent_models", mode="before")
+    @classmethod
+    def _parse_agent_models(cls, v):
+        """Accept JSON list, comma-separated string, or empty value from env."""
+        if v is None or v == "":
+            return ["gpt-4o"]
+        if isinstance(v, str):
+            s = v.strip()
+            if s.startswith("["):
+                return json.loads(s)
+            return [m.strip() for m in s.split(",") if m.strip()]
+        return v
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _parse_cors(cls, v):
+        if isinstance(v, str):
+            s = v.strip()
+            if s.startswith("["):
+                return json.loads(s)
+            return [o.strip() for o in s.split(",") if o.strip()]
+        return v
 
 
 settings = Settings()
