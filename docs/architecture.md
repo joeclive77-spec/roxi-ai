@@ -1,4 +1,4 @@
-# AI Assistant — System Architecture
+# Roxi AI — System Architecture
 
 A cross-platform, multimodal conversational AI assistant. This document describes
 the two components scaffolded in this repo: a **FastAPI streaming backend** and an

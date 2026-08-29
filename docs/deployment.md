@@ -1,4 +1,4 @@
-# AI Assistant — Deployment & Security Roadmap
+# Roxi AI — Deployment & Security Roadmap
 
 ## Prerequisites
 - Python 3.11+ (3.14 supported by core deps; Postgres extras need matching wheels)
