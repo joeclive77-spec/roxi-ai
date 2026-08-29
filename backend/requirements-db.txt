@@ -1,0 +1,4 @@
+# Optional: only needed when DATABASE_URL is set (Postgres persistence/RAG).
+pgvector>=0.2.5
+psycopg[binary]>=3.1.0
+sqlalchemy>=2.0.0
