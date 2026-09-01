@@ -60,7 +60,7 @@ class Settings(BaseSettings):
         if v and str(v).strip():
             return v
         key = (info.data.get("llm_api_key") or "").strip()
-        return "openrouter/auto" if key.startswith("sk-or-v1-") else "gpt-4o-mini"
+        return "openai/gpt-4o-mini" if key.startswith("sk-or-v1-") else "gpt-4o-mini"
 
     @field_validator("llm_base_url", mode="before")
     @classmethod
@@ -88,7 +88,7 @@ class Settings(BaseSettings):
         key = (info.data.get("llm_api_key") or "").strip()
         is_or = key.startswith("sk-or-v1-")
         if v is None or v == "" or (isinstance(v, (list, tuple)) and not v):
-            return ["openrouter/auto"] if is_or else ["gpt-4o"]
+            return ["openai/gpt-4o-mini"] if is_or else ["gpt-4o"]
         if isinstance(v, str):
             s = v.strip()
             if s.startswith("["):
