@@ -1,0 +1,23 @@
+# Render Blueprint — deploys the Roxi AI backend.
+# In Render dashboard: New -> Blueprint -> select this GitHub repo.
+# Set the required env vars (LLM keys) in the Render service dashboard.
+services:
+  - type: web
+    name: roxi-ai-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false  # leave empty for in-memory mode, or set to managed Postgres
+      - key: LLM_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    healthCheckPath: /health
