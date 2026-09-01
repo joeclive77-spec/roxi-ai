@@ -10,7 +10,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import Markdown from 'react-native-markdown-display';
+import LightMarkdown from '../components/LightMarkdown';
 
 import { streamChat } from '../services/sseClient';
 
@@ -72,7 +72,7 @@ export default function ChatScreen() {
       {item.role === 'assistant' && item.sources?.length > 0 && (
         <Text style={styles.sourceText}>Grounding: {item.sources.length} sources</Text>
       )}
-      <Markdown>{item.text || (item.role === 'assistant' && busy ? '▎' : '')}</Markdown>
+      <LightMarkdown>{item.text || (item.role === 'assistant' && busy ? '▎' : '')}</LightMarkdown>
     </View>
   );
 

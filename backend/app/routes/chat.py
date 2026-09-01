@@ -14,12 +14,37 @@ import uuid
 from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
 from starlette.requests import Request
+from starlette.responses import Response
+
+from fastapi import status
+from pydantic import BaseModel, Field
 
 from app.models.schemas import ChatRequest
 from app.services import llm, search
 from app.services.usage import tracker
 
 router = APIRouter(prefix="/api", tags=["chat"])
+
+
+class CrashReport(BaseModel):
+    kind: str = "global"
+    message: str | None = None
+    stack: str | None = None
+    app: str = "unknown"
+    version: str = "unknown"
+
+
+@router.post("/crashlog", status_code=status.HTTP_204_NO_CONTENT)
+async def crashlog(report: CrashReport):
+    """Client-side crash reporter sink. Logs fatal JS errors from the mobile
+    app so they surface in the hosted service logs even when native logcat
+    is unavailable (release builds)."""
+    print(
+        f"[crashlog] kind={report.kind} app={report.app} v{report.version} "
+        f"msg={report.message!r}\n{report.stack or ''}",
+        flush=True,
+    )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 SYSTEM_PROMPT = (
     "You are a helpful multimodal AI assistant. Answer concisely and "

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "cliveys67",
     "name": "Roxi AI",
     "slug": "roxi-ai",
     "version": "0.1.0",
@@ -39,7 +40,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "1c821c1f-6542-47e9-b14b-c1aae11a59f7"
       }
     }
   }
