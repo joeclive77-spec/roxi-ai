@@ -29,9 +29,9 @@ class Settings(BaseSettings):
 
     # LLM orchestrator
     llm_api_key: str = ""
-    llm_base_url: str = "https://api.openai.com/v1"
-    llm_chat_model: str = "gpt-4o-mini"
-    llm_agent_models: List[str] = ["gpt-4o"]
+    llm_base_url: str = ""
+    llm_chat_model: str = ""
+    llm_agent_models: List[str] = []
     llm_max_tokens: int = 4096
 
     # Search grounding
@@ -53,12 +53,42 @@ class Settings(BaseSettings):
     rate_limit_per_min: int = 60
     rate_limit_tokens_per_day: int = 100_000
 
+    @field_validator("llm_chat_model", mode="before")
+    @classmethod
+    def _resolve_chat_model(cls, v, info):
+        """Default to an OpenRouter-compatible model when using an OpenRouter key."""
+        if v and str(v).strip():
+            return v
+        key = (info.data.get("llm_api_key") or "").strip()
+        return "openrouter/auto" if key.startswith("sk-or-v1-") else "gpt-4o-mini"
+
+    @field_validator("llm_base_url", mode="before")
+    @classmethod
+    def _resolve_llm_base_url(cls, v, info):
+        """If base URL is unset but the key is an OpenRouter key, use OpenRouter.
+
+        The Render blueprint only sets LLM_API_KEY; without this, new users
+        who configure an OpenRouter key would silently hit OpenAI (401).
+        """
+        if v and str(v).strip():
+            return v
+        key = (info.data.get("llm_api_key") or "").strip()
+        if key.startswith("sk-or-v1-"):
+            return "https://openrouter.ai/api/v1"
+        return "https://api.openai.com/v1"
+
     @field_validator("llm_agent_models", mode="before")
     @classmethod
-    def _parse_agent_models(cls, v):
-        """Accept JSON list, comma-separated string, or empty value from env."""
-        if v is None or v == "":
-            return ["gpt-4o"]
+    def _parse_agent_models(cls, v, info):
+        """Accept JSON list, comma-separated string, or empty value from env.
+
+        When an OpenRouter key is detected and no explicit models are set,
+        default to a widely-available OpenRouter model.
+        """
+        key = (info.data.get("llm_api_key") or "").strip()
+        is_or = key.startswith("sk-or-v1-")
+        if v is None or v == "" or (isinstance(v, (list, tuple)) and not v):
+            return ["openrouter/auto"] if is_or else ["gpt-4o"]
         if isinstance(v, str):
             s = v.strip()
             if s.startswith("["):
